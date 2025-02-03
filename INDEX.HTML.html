@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Gender Recognition</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: whitesmoke;
+    }
+    #microphone-container {
+      text-align: center;
+    }
+    #microphone-icon {
+      font-size: 50px;
+      cursor: pointer;
+      margin: 20px;
+    }
+    #status {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    #gender-result {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+    <body background="https://media.istockphoto.com/id/1080493210/vector/phone-audio.jpg?s=612x612&w=0&k=20&c=hFtx4JZjfXop6raYU-09JIKx1EC_kezhGn7haWRtoFs=" style="background-repeat:no-repeat; background-size:100% 100%;">
+  <div id="microphone-container">
+    <div id="microphone-icon">🎤</div>
+    <div id="status">Click the microphone to start listening</div>
+    <div id="gender-result">Gender: Unknown</div>
+  </div>
+
+  <script>
+    const statusElement = document.getElementById('status');
+    const genderResultElement = document.getElementById('gender-result');
+    const microphoneIcon = document.getElementById('microphone-icon');
+
+    let audioContext;
+    let analyser;
+    let microphone;
+    let mediaStream;
+    let isListening = false;
+
+    const malePitchThreshold = 85; 
+    const femalePitchThreshold = 255;
+    
+    microphoneIcon.addEventListener('click', async () => {
+      if (isListening) {
+        stopListening();
+      } else {
+        await startListening();
+      }
+    });
+
+    
+    async function startListening() {
+      try {
+        
+        mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        
+        
+        microphone = audioContext.createMediaStreamSource(mediaStream);
+        microphone.connect(analyser);
+
+    
+        statusElement.textContent = 'Listening...';
+
+    
+        isListening = true;
+        microphoneIcon.textContent = '⏸️'; 
+        genderResultElement.textContent = 'Gender: Unknown';
+
+      
+        analyzeAudio();
+      } catch (err) {
+        console.error('Error accessing microphone: ', err);
+        statusElement.textContent = 'Error accessing the microphone.';
+      }
+    }
+
+    function stopListening() {
+     
+      mediaStream.getTracks().forEach(track => track.stop());
+
+  
+      statusElement.textContent = 'Click the microphone to start listening';
+      genderResultElement.textContent = 'Gender: Unknown';
+      microphoneIcon.textContent = '🎤';  
+      isListening = false;
+    }
+
+    function analyzeAudio() {
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+
+  
+      function detectPitch() {
+        analyser.getByteFrequencyData(dataArray);
+
+        let sum = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          sum += dataArray[i];
+        }
+        const averageFrequency = sum / bufferLength;
+
+        if (averageFrequency >malePitchThreshold) {
+          genderResultElement.textContent = 'Gender: Male';
+        } else if (averageFrequency <femalePitchThreshold) {
+          genderResultElement.textContent = 'Gender: Female';
+        } else {
+          genderResultElement.textContent = 'Gender: Unknown';
+        }
+
+        if (isListening) {
+          requestAnimationFrame(detectPitch);
+        }
+      }
+
+      detectPitch();
+    }
+  </script>
+</body>
+</html>
+
+
