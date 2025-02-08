@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Webpage</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      color: beige;
+      background: url('https://i.pinimg.com/736x/99/df/20/99df20fdde47209a60f15f2b47b37fdf.jpg=') no-repeat center center/cover;
+      background-attachment: fixed; /* Keeps the background static */
+    }
+
+    /* Animated Gradient for the Background */
+    .gradient-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(0, 255, 255, 0.4), rgba(194, 114, 114, 0.4), rgba(0, 255, 0, 0.4));
+      background-size: 400% 400%;
+      animation: gradientMove 6s ease infinite;
+      z-index: -1; /* Ensure the overlay is below other content */
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Content Styling */
+    .content {
+      text-align: center;
+      z-index: 10;
+      position: relative;
+      animation: fadeIn 3s ease-out;
+    }
+
+    .content h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color:navy;
+    }
+
+    .content p {
+      font-size: 1.8rem;
+      color:darkmagenta;
+    }
+
+    /* Hover effect for interactivity */
+    .content button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      color:maroon;
+      background-color: bisque;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .content button:hover {
+      background-color:cadetblue;
+    }
+
+    /* Animation for fade-in effect */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Gradient Animation Overlay -->
+  <div class="gradient-overlay"></div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <h1>WELCOME!</h1>
+    <br>
+    <p><b>Gender recognition by voice</b></p>
+    <br>
+    <br>
+    <button onclick="showAlert()">
+        <a href="C:\Users\yukth\OneDrive\Tài liệu\HACKATHON\voice micr.html">
+            <img src="https://i.pinimg.com/736x/5f/17/e8/5f17e8b530871ffaf3011bbb2318dc26.jpg" height="100" width="100"
+        </a>
+        </button>
+  </div>
+</body>
+</html>
